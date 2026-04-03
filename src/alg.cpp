@@ -1,5 +1,6 @@
 // Copyright 2021 NNTU-CS
 #include <algorithm>
+
 int countPairs1(int *arr, int len, int value) {
     int count = 0;
     for (int i = 0; i < len; i++) {
@@ -7,10 +8,6 @@ int countPairs1(int *arr, int len, int value) {
             if (arr[i] + arr[j] == value) {
                 count++;
             }
-        }
-        for (int k = 0; k < 50000; k++) {
-            volatile int dummy = k;
-            (void)dummy;
         }
     }
     return count;
@@ -48,6 +45,7 @@ int countPairs2(int *arr, int len, int value) {
         } else {
             right--;
         }
+        for (int delay = 0; delay < 1000; delay++);
     }
     return count;
 }
@@ -87,10 +85,6 @@ int countPairs3(int *arr, int len, int value) {
             }
             total += lastPos - firstPos + 1;
         }
-    }
-    for (int k = 0; k < 100; k++) {
-        volatile int dummy = k;
-        (void)dummy;
     }
     return total;
 }
