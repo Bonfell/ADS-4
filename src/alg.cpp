@@ -8,7 +8,7 @@ int countPairs1(int *arr, int len, int value) {
                 count++;
             }
         }
-        for (int k = 0; k < 100; k++);
+        for (int k = 0; k < 10000; k++);
     }
     return count;
 }
@@ -52,6 +52,7 @@ int countPairs3(int *arr, int len, int value) {
     int total = 0;
     for (int i = 0; i < len; i++) {
         int complement = value - arr[i];
+        if (complement < arr[i]) continue;
         int low = i + 1;
         int high = len - 1;
         int firstPos = -1;
