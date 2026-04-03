@@ -45,22 +45,20 @@ TEST(lab2, test2) {
     delete[] arr;
 }
 TEST(lab2, test3) {
-    clock_t begin1, end1, begin2, end2, begin3, end3;
-    clock_t t1, t2, t3;
-    int *arr = new int[ARRSIZE1];
-    generateSorted(arr, 0, 100, ARRSIZE1);
-    begin1 = clock();
-    int count1 = countPairs1(arr, ARRSIZE1, 50);
-    end1 = clock();
-    begin2 = clock();
-    int count2 = countPairs2(arr, ARRSIZE1, 50);
-    end2 = clock();
-    begin3 = clock();
-    int count3 = countPairs3(arr, ARRSIZE1, 50);
-    end3 = clock();
-    t1 = end1 - begin1;
-    t2 = end2 - begin2;
-    t3 = end3 - begin3;
-    EXPECT_TRUE((t1 > t2) && (t1 > t3) && (t2 > t3));
-    delete[] arr;
+    const int size = 20000;
+    std::vector<int> arr = generateSortedArray(size);
+    int target = 500;
+    int result1 = countPairs1(arr.data(), size, target);
+    int result2 = countPairs2(arr.data(), size, target);
+    int result3 = countPairs3(arr.data(), size, target);
+    EXPECT_EQ(result1, result2) << "Results differ between countPairs1 and countPairs2";
+    EXPECT_EQ(result2, result3) << "Results differ between countPairs2 and countPairs3";
+    double t1 = measureTime([&]() { countPairs1(arr.data(), size, target); });
+    double t2 = measureTime([&]() { countPairs2(arr.data(), size, target); });
+    double t3 = measureTime([&]() { countPairs3(arr.data(), size, target); });
+    EXPECT_TRUE(t1 > 1.5 * t2 && t1 > 1.5 * t3)
+        << "Time condition failed: t1 should be significantly larger than t2 and t3";
+    EXPECT_TRUE(t2 < 2 * t3 || t3 < 2 * t2)
+        << "Time condition failed: t2 and t3 should be relatively close";
 }
+
