@@ -77,6 +77,7 @@ TEST(lab2, test3) {
     std::vector<int> arr = generateSortedVector(size, 0, 1000);
     int target = 500;
 
+
     int result1 = countPairs1(arr.data(), size, target);
     int result2 = countPairs2(arr.data(), size, target);
     int result3 = countPairs3(arr.data(), size, target);
@@ -85,6 +86,7 @@ TEST(lab2, test3) {
         << "Results differ between countPairs1 and countPairs2";
     EXPECT_EQ(result2, result3)
         << "Results differ between countPairs2 and countPairs3";
+
 
     double t1 = measureTime([&]() {
         countPairs1(arr.data(), size, target);
@@ -96,8 +98,11 @@ TEST(lab2, test3) {
         countPairs3(arr.data(), size, target);
     });
 
-    EXPECT_TRUE(t1 > 1.5 * t2 && t1 > 1.5 * t3)
+    bool condition1 = t1 > 1.5 * t2 && t1 > 1.5 * t3;
+    EXPECT_TRUE(condition1)
         << "Time condition failed: t1 should be significantly larger than t2 and t3";
-    EXPECT_TRUE(t2 < 2 * t3 || t3 < 2 * t2)
+
+    bool condition2 = t2 < 2 * t3 || t3 < 2 * t2;
+    EXPECT_TRUE(condition2)
         << "Time condition failed: t2 and t3 should be relatively close";
 }
