@@ -1,35 +1,5 @@
 // Copyright 2021 NNTU-CS
 #include <algorithm>
-void binarySearchRange(int* arr, int len, int target, int& left, int& right) {
-    left = -1;
-    right = -1;
-    int low = 0, high = len - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] < target) {
-            low = mid + 1;
-        } else if (arr[mid] > target) {
-            high = mid - 1;
-        } else {
-            left = mid;
-            high = mid - 1;
-        }
-    }
-    if (left == -1) return;
-    low = 0;
-    high = len - 1;
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] < target) {
-            low = mid + 1;
-        } else if (arr[mid] > target) {
-            high = mid - 1;
-        } else {
-            right = mid;
-            low = mid + 1;
-        }
-    }
-}
 int countPairs1(int *arr, int len, int value) {
     int count = 0;
     for (int i = 0; i < len; i++) {
@@ -46,8 +16,8 @@ int countPairs2(int *arr, int len, int value) {
     int left = 0;
     int right = len - 1;
     while (left < right) {
-        int currentSum = arr[left] + arr[right];
-        if (currentSum == value) {
+        int sum = arr[left] + arr[right];
+        if (sum == value) {
             if (arr[left] == arr[right]) {
                 int n = right - left + 1;
                 count += n * (n - 1) / 2;
@@ -56,18 +26,18 @@ int countPairs2(int *arr, int len, int value) {
                 int leftCount = 1;
                 while (left + 1 < right && arr[left] == arr[left + 1]) {
                     leftCount++;
-            left++;
-        }
+                    left++;
+                }
                 int rightCount = 1;
                 while (right - 1 > left && arr[right] == arr[right - 1]) {
-            rightCount++;
-            right--;
-        }
+                    rightCount++;
+                    right--;
+                }
                 count += leftCount * rightCount;
+                left++;
+                right--;
             }
-            left++;
-            right--;
-        } else if (currentSum < value) {
+        } else if (sum < value) {
             left++;
         } else {
             right--;
@@ -79,9 +49,9 @@ int countPairs3(int *arr, int len, int value) {
     int total = 0;
     for (int i = 0; i < len; i++) {
         int complement = value - arr[i];
-        if (complement < arr[i]) continue;
-        int left = -1;
-        int low = i + 1, high = len - 1;
+        int low = i + 1;
+        int high = len - 1;
+        int firstPos = -1;
         while (low <= high) {
             int mid = low + (high - low) / 2;
             if (arr[mid] < complement) {
@@ -89,13 +59,14 @@ int countPairs3(int *arr, int len, int value) {
             } else if (arr[mid] > complement) {
                 high = mid - 1;
             } else {
-                left = mid;
+                firstPos = mid;
                 high = mid - 1;
             }
         }
-        if (left != -1) {
-            int right = left;
-            low = left, high = len - 1;
+        if (firstPos != -1) {
+            low = firstPos;
+            high = len - 1;
+            int lastPos = firstPos;
             while (low <= high) {
                 int mid = low + (high - low) / 2;
                 if (arr[mid] < complement) {
@@ -103,11 +74,11 @@ int countPairs3(int *arr, int len, int value) {
                 } else if (arr[mid] > complement) {
                     high = mid - 1;
                 } else {
-                    right = mid;
+                    lastPos = mid;
                     low = mid + 1;
                 }
             }
-            total += right - left + 1;
+            total += lastPos - firstPos + 1;
         }
     }
     return total;
