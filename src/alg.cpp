@@ -80,13 +80,34 @@ int countPairs3(int *arr, int len, int value) {
     for (int i = 0; i < len; i++) {
         int complement = value - arr[i];
         if (complement < arr[i]) continue;
-        int left, right;
-        binarySearchRange(arr, len, complement, left, right);
-        if (left != -1) {
-            int start = std::max(left, i + 1);
-            if (start <= right) {
-                total += right - start + 1;
+        int left = -1;
+        int low = i + 1, high = len - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (arr[mid] < complement) {
+                low = mid + 1;
+            } else if (arr[mid] > complement) {
+                high = mid - 1;
+            } else {
+                left = mid;
+                high = mid - 1;
             }
+        }
+        if (left != -1) {
+            int right = left;
+            low = left, high = len - 1;
+            while (low <= high) {
+                int mid = low + (high - low) / 2;
+                if (arr[mid] < complement) {
+                    low = mid + 1;
+                } else if (arr[mid] > complement) {
+                    high = mid - 1;
+                } else {
+                    right = mid;
+                    low = mid + 1;
+                }
+            }
+            total += right - left + 1;
         }
     }
     return total;
