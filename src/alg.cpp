@@ -15,16 +15,39 @@ int countPairs1(int *arr, int len, int value) {
 
 int countPairs2(int *arr, int len, int value) {
     int count = 0;
-    for (int i = 0; i < len; i++) {
-        for (int j = len - 1; j > i; j--) {
-            if (arr[i] + arr[j] == value) {
-                count++;
+    int left = 0;
+    int right = len - 1;
+    while (left < right) {
+        int currentSum = arr[left] + arr[right];
+        if (currentSum == value) {
+            if (arr[left] == arr[right]) {
+                int n = right - left + 1;
+                count += n * (n - 1) / 2;
+                break;
+            } else {
+                int leftCount = 1;
+                while (left + 1 < right && arr[left] == arr[left + 1]) {
+                    leftCount++;
+                    left++;
+                }
+                int rightCount = 1;
+                while (right - 1 > left && arr[right] == arr[right - 1]) {
+                    rightCount++;
+            right--;
+        }
+                count += leftCount * rightCount;
             }
-            if (arr[i] + arr[j] < value) break;
+            left++;
+            right--;
+        } else if (currentSum < value) {
+            left++;
+        } else {
+            right--;
         }
     }
     return count;
 }
+
 
 int countPairs3(int *arr, int len, int value) {
     int total = 0;
@@ -63,9 +86,6 @@ int countPairs3(int *arr, int len, int value) {
             total += lastPos - firstPos + 1;
         }
     }
-    for (int delay = 0; delay < 100000; delay++) {
-        volatile int dummy = delay;
-        (void)dummy;
-    }
     return total;
 }
+
