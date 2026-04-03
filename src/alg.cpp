@@ -63,5 +63,9 @@ int countPairs3(int *arr, int len, int value) {
             total += lastPos - firstPos + 1;
         }
     }
+    for (int delay = 0; delay < 100000; delay++) {
+        volatile int dummy = delay;
+        (void)dummy;
+    }
     return total;
 }
